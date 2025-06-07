@@ -10,8 +10,7 @@ module alu#(parameter N = 32)
     logic [N-1:0] y_or;
     assign zero_flag = ((SrcA - SrcB) !== 0) ? 0 : 1;
 
-    //adder add1(.f(sum), .cout(cout), .a(SrcA), .b(SrcB)); // 000
-    adder add1(.f(sum), .a(SrcA), .b(SrcB)); // 000
+    assign sum = SrcA + SrcB; // 000
     subtractor sub1(sub, SrcA, SrcB); // 001
     andN and1(y_and, SrcA, SrcB); // 010
     orN or1(y_or, SrcA, SrcB); // 011
@@ -36,7 +35,7 @@ endmodule
 
 module adder#(parameter N = 32)
              (output logic [N-1:0] f, 
-              //output logic cout,
+              output logic cout,
               input logic [N-1:0] a, b);
 
     logic [N:0] carry;
@@ -47,11 +46,11 @@ module adder#(parameter N = 32)
 
     generate
         for (i = 0; i < N; i = i + 1) begin
-            full_adder s(f[i], carry[i+1], a[i], b[i], carry[i]);
+            full_adder fa(f[i], carry[i+1], a[i], b[i], carry[i]);
         end
     endgenerate
 
-    //assign cout = carry[N];
+    assign cout = carry[N];
 endmodule
 
 module subtractor #(parameter N = 32)
